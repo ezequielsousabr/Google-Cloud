@@ -6,11 +6,11 @@ function install_agent {
     if ( (Get-Service -Name StackdriverMonitoring | Select-Object -Unique "Status" ) -eq ("Stopped") -or (Get-Service -Name Stackdrivermonitoring) )
     {
 
-        Get-Date;
+        Write-Output ( "Inicialização do script em: $(Get-Date)" );
         
         Write-Output "";
     
-        Write-Output ( "Voce esta logado como: $env:USERNAME" ); Start-Sleep 2;
+        Write-Output ( "Voce esta logado como: ${env:USERNAME} no Host: Host: ${env:COMPUTERNAME}" ); Start-Sleep 2;
         
         Write-Output "";
 
@@ -20,7 +20,9 @@ function install_agent {
 
         Write-Output "";
 
-        Write-Output ( "Seu endereço ip: " ); Invoke-WebRequest -Uri ipinfo.io/ip | Select-Object -Unique "Content";
+        $ip = $(Invoke-WebRequest -Uri ipinfo.io/ip | Select-Object -Unique "Content");
+
+        Write-Output ( "Seu endereço ip: "+${ip} );
 
         Write-Output "";
 
@@ -28,13 +30,12 @@ function install_agent {
 
         # Instalação do agente
 
-        (New-Object Net.WebClient).DownloadFile("https://repo.stackdriver.com/windows/StackdriverMonitoring-GCM-46.exe", "${env:UserProfile}\StackdriverMonitoring-GCM-46.exe")
-        & "${env:UserProfile}\StackdriverMonitoring-GCM-46.exe"
+        (New-Object Net.WebClient).DownloadFile("https://repo.stackdriver.com/windows/StackdriverMonitoring-GCM-46.exe", "${HOME}\Downloads\StackdriverMonitoring-GCM-46.exe")
+        & "${HOME}\Downloads\StackdriverMonitoring-GCM-46.exe"
 
         # Remover o executável baixado
 
         if ( Get-ChildItem -Filter StackdriverMonitoring-GCM-46.exe ) { Start-Sleep 2;
-
 
             Write-Output ( "Buscando o download do executável... Excluindo arquivo baixado!" );
 
@@ -42,13 +43,19 @@ function install_agent {
 
             Write-Output ( "Iremos remover o executável baixado. Confirme para excluir ou cancele a operação!" );
         
-            Remove-Item -Path $HOME\StackdriverMonitoring-GCM-46.exe -Confirm;
+            Remove-Item -Path ${HOME}\Downloads\StackdriverMonitoring-GCM-46.exe -Confirm;
 
             Write-Output "";
 
+            Get-Location -Verbose;
+
         }else {
         
-            Write-Output ( "Não encontramos o executável. Por isso, nada será removido. Exclua manualmente!" );
+            Write-Output ( "Não encontramos o executável. Por isso, nada será removido... Listando diretório" );
+
+            Start-Sleep 2;
+
+            Get-ChildItem -File;
         
         }
 
@@ -67,10 +74,10 @@ function install_agent {
         Write-Output ( "2. Verifique se o serviço ja esta sendo executado!" );
 
         Get-Service -Name StackdriverMonitoring;
-        
-        Write-Output "";
 
     }
+
+    Write-Output "";
 
     Start-Sleep 2; Write-Output ( "Finalizado!" );
 
