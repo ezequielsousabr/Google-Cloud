@@ -1,4 +1,4 @@
-﻿# Função inicia a instalaçao do agente para o Computer Engine - Instancias do Google Cloud.
+# Função inicia a instalaçao do agente para o Computer Engine - Instancias do Google Cloud.
 # Após a instalação é possível monitorar informações do sistema pela plataforma ou pela cli gcloud.
 
 function install_agent {
