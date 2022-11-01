@@ -11,4 +11,4 @@
 
 <h5>Executando o script</h5>
 
-` .\install_agent.ps1 `
+` .\install.ps1 `
